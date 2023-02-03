@@ -9,12 +9,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "animejs": "^3.2.1",
+    "axios": "^1.2.6",
     "pinia": "^2.0.29",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-vue": "^9.9.0",
+    "prettier": "2.8.3",
     "vite": "^4.0.0",
     "vite-plugin-windicss": "^1.8.10",
     "windicss": "^3.5.6"

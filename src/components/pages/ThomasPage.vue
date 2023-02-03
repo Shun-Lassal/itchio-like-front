@@ -1,9 +1,5 @@
-<script setup>
-
-</script>
+<script setup></script>
 
 <template>
-  <div>
-    Thomas page
-  </div>
+  <div class="page">Thomas page</div>
 </template>

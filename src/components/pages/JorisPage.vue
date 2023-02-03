@@ -1,9 +1,5 @@
-<script setup>
-
-</script>
+<script setup></script>
 
 <template>
-  <div>
-    Joris page
-  </div>
+  <div class="page">Joris page</div>
 </template>
