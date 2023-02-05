@@ -1,6 +1,17 @@
-<script setup></script>
+<script setup>
+import { onMounted } from "vue";
+import { useCoreStore } from "../../stores/coreStore";
+const coreStore = useCoreStore();
+
+onMounted(async () => {
+  // await coreStore.getUserInfos();
+});
+</script>
 
 <template>
+  <button @click="coreStore.getUserInfos" class="mt-4 p-4 bg-gray-500">
+    getUserInfos
+  </button>
   <div class="flex justify-center items-center">
     <div
       class="flex flex-col justify-center items-center p-8 bg-gray-400 space-y-4"
@@ -23,8 +34,9 @@
 
         <div class="flex flex-col flex-wrap space-y-2">
           <span>Tester</span>
-          <span>Test2text@testing.com</span>
-          <span>*********</span>
+          <span v-if="coreStore.user">{{ coreStore.user.email }}</span>
+          <span v-if="!coreStore.user">Loading...</span>
+          <span>********</span>
           <span>0600000000</span>
           <span>Normal, Admin, superDumby</span>
         </div>

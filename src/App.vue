@@ -9,17 +9,21 @@ const coreStore = useCoreStore();
 
 const router = useRouter();
 
-const token = coreStore.token;
-
 onMounted(async () => {
-  await coreStore.setToken();
+  await coreStore.setToken(() => {
+    router.push({ name: "auth" });
+  });
+  await coreStore.setPayload();
 });
 </script>
 
 <template>
   {{ coreStore }}
   <div class="border-b border-black">
-    <div v-if="token" class="flex items-center gap-16 text-xl font-bold m-4">
+    <div
+      v-if="coreStore.token && coreStore.token.length > 0"
+      class="flex items-center gap-16 text-xl font-bold m-4"
+    >
       <router-link class="p-2 border border-black" to="/">Home</router-link>
       <router-link class="p-2 border border-black" to="/joris"
         >Joris</router-link
@@ -31,9 +35,9 @@ onMounted(async () => {
       <router-link class="p-2 border border-black" to="/profil"
         >Profil</router-link
       >
-      <router-link class="p-2 border border-black" to="/credentials"
-        >Login - Sign Up</router-link
-      >
+      <div v-if="coreStore.payload && coreStore.payload.length > 0">
+        {{ coreStore.payload }}
+      </div>
     </div>
   </div>
   <div class="">

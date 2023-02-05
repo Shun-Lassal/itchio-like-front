@@ -1,20 +1,10 @@
 <script setup>
 import { ref } from "vue";
 import validation from "../../utils/credentialsVerif.js";
-// Faire une fonction qui stock les données envoyé dans une variable object pour ensuite etre envoyé a axios, mais pour l'instant tu peux pas envoyer a axios
-// handleSubmit
-// Submit
-// voir structure des variables
-// faire pareil pour register et profil
-// const inputValue = ref("");
-// const inputPassword = ref("***");
-
-const fromRegister = ref({
-  username: "",
-  email: "",
-  password: "",
-  repeatPassword: "",
-});
+// Validation for Credentials Verification
+import { useCoreStore } from "../../stores/coreStore";
+const coreStore = useCoreStore();
+// CoreStore for accessing the stored formRegister Objects
 
 // Check for Username START
 const isUsernameOk = ref({ validUsername: true, validLength: true });
@@ -65,12 +55,12 @@ const isRepeatPasswordOk = ref({
 const checkRepeatPasswords = (event) => {
   if (event.length >= 1) {
     isRepeatPasswordOk.value = validation.isValidPasswords(
-      fromRegister.value.password,
+      coreStore.formRegister.password,
       event
     );
     console.log(isRepeatPasswordOk.value);
   } else {
-    isRepeatPasswordOk = {
+    isRepeatPasswordOk.value = {
       validFirstPswd: true,
       validSecondPswd: true,
       validPswds: true,
@@ -81,7 +71,7 @@ const checkRepeatPasswords = (event) => {
 </script>
 
 <template>
-  {{ fromRegister }}
+  {{ coreStore.formRegister }}
   <div class="flex flex-col justify-center items-center h-120">
     <div class="flex flex-wrap justify-center items-center bg-gray-400 p-12">
       <div class="pr-12">
@@ -110,7 +100,7 @@ const checkRepeatPasswords = (event) => {
             <input
               type="text"
               name="username"
-              @input="fromRegister.username = $event.target.value"
+              @input="coreStore.formRegister.username = $event.target.value"
               @focusout="checkUsername($event.target.value)"
             />
             <span
@@ -130,7 +120,7 @@ const checkRepeatPasswords = (event) => {
             <input
               type="email"
               name="email"
-              @input="fromRegister.email = $event.target.value"
+              @input="coreStore.formRegister.email = $event.target.value"
               @focusout="checkMail($event.target.value)"
             />
             <span class="text-red-700 text-center" v-if="!isMailOk.validLength"
@@ -147,7 +137,7 @@ const checkRepeatPasswords = (event) => {
               type="password"
               name="password"
               @input="
-                fromRegister.password = $event.target.value;
+                coreStore.formRegister.password = $event.target.value;
                 checkPassword($event.target.value);
               "
             />
@@ -161,8 +151,10 @@ const checkRepeatPasswords = (event) => {
             <input
               type="password"
               name="rpassword"
-              @input="fromRegister.repeatPassword = $event.target.value"
-              @focusout="checkRepeatPasswords($event.target.value)"
+              @input="
+                coreStore.formRegister.repeatPassword = $event.target.value;
+                checkRepeatPasswords($event.target.value);
+              "
             />
             <span
               class="text-red-700 text-center"

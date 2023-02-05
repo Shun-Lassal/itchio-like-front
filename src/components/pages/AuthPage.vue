@@ -7,6 +7,7 @@ const router = useRouter();
 const coreStore = useCoreStore();
 
 const loginForm = coreStore.formLogin;
+const formRegister = coreStore.formRegister;
 const isRegister = ref(false);
 
 const login = async () => {
@@ -62,12 +63,14 @@ const login = async () => {
         <div class="flex flex-col gap-2 mt-8">
           <div class="uppercase text-xs font-semibold">Adresse email</div>
           <input
+            @input="formRegister.email = $event.target.value"
             class="outline-none bg-dark-900 border-dark-300 border rounded-lg px-2 py-1"
             type="text"
           />
           <div class="flex flex-col gap-2 mt-2">
             <div class="uppercase text-xs font-semibold">Mot de passe</div>
             <input
+              @input="formRegister.password = $event.target.value"
               class="outline-none bg-dark-900 border-dark-300 border rounded-lg px-2 py-1"
               type="password"
             />
@@ -75,6 +78,7 @@ const login = async () => {
           <div class="flex flex-col gap-2 mt-2">
             <div class="uppercase text-xs font-semibold">Confirmation</div>
             <input
+              @input="formRegister.confirmPassword = $event.target.value"
               class="outline-none bg-dark-900 border-dark-300 border rounded-lg px-2 py-1"
               type="password"
             />
@@ -82,6 +86,7 @@ const login = async () => {
         </div>
 
         <button
+          @click="coreStore.register"
           class="bg-dark-600 border border-dark-300 rounded-lg mt-8 py-1 px-2 hover:bg-dark-300 select-none cursor-pointer"
         >
           S'inscrire
