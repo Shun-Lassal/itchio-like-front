@@ -1,24 +1,17 @@
 <script setup>
-import { ref } from "vue";
-
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 import { useCoreStore } from "@/stores/coreStore";
 const coreStore = useCoreStore();
 
-const router = useRouter();
-
 onMounted(async () => {
-  await coreStore.setToken(() => {
-    router.push({ name: "auth" });
-  });
+  await coreStore.setToken();
   await coreStore.setPayload();
 });
 </script>
 
 <template>
-  {{ coreStore }}
   <div class="border-b border-black">
     <div
       v-if="coreStore.token && coreStore.token.length > 0"

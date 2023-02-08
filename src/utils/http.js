@@ -1,5 +1,24 @@
-// const BASE_URL = "http://192.168.170.150:8080";
-const BASE_URL = "http://192.168.1.71:8080";
-export default {
-  BASE_URL,
-};
+import axios from "axios";
+
+axios.defaults.baseURL = "http://192.168.174.150:8080/"; // blackbox
+
+axios.interceptors.request.use(
+  async (config) => {
+    const token = localStorage.getItem("session_user_token");
+
+    if (token) {
+      config.headers = {
+        ...config.headers,
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      };
+    }
+
+    return config;
+  }
+  // (error) => Promise.reject(error)
+);
+
+// axios.interceptors.response.use()
+
+export const secureAxios = axios;
