@@ -7,6 +7,7 @@ import ShunPage from "@/components/pages/ShunPage.vue";
 import ThomasPage from "@/components/pages/ThomasPage.vue";
 import ProfilPage from "@/components/pages/ProfilPage.vue";
 import CredentialsPage from "@/components/pages/CredentialsPage.vue";
+import GamePage from "@/components/pages/GamePage.vue";
 
 const routes = [
   { path: "/", name: "home", component: HomePage },
@@ -16,6 +17,7 @@ const routes = [
   { path: "/thomas", name: "thomas", component: ThomasPage },
   { path: "/profil", name: "profil", component: ProfilPage },
   { path: "/credentials", name: "credentials", component: CredentialsPage },
+  { path: "/game/:id", name: "gamePage", component: GamePage },
 ];
 
 const router = createRouter({

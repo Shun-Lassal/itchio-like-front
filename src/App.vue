@@ -12,7 +12,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="border-b border-black">
+  <div class="">
     <div
       v-if="coreStore.token && coreStore.token.length > 0"
       class="flex items-center gap-16 text-xl font-bold m-4"
