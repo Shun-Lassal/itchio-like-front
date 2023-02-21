@@ -1,80 +1,73 @@
 <script setup>
 import { usePoopStore } from "../../stores/poopStore";
+import headerComp from "../comps/headerComp.vue";
 import GameCardFree from "../comps/gameCardFree.vue";
+import { onMounted } from "vue";
+import { ref } from "vue";
 
 const poopStore = usePoopStore();
-
-poopStore.callTwitchApi();
+onMounted(async () => {
+  await poopStore.getGamesInfos();
+  await poopStore.fetchGenres();
+  await poopStore.fetchPlatforms();
+});
+const page = ref(1);
 </script>
 
 <template>
   <div class="flex flex-col page">
     <!-- HEADER -->
-    <div class="bg-gray-800">
-      <div class="flex h-15 justify-center items-center">
-        <div
-          class="flex text-white fill-white h-full justify-center items-center"
-        >
-          <h1
-            class="text-2xl font-bold whitespace-nowrap text-shadow-xl mx-auto ml-12"
-          >
-            13<span class="text-sm align-top text-shadow-xl">th</span> Game.io
-          </h1>
-        </div>
-        <div
-          class="flex flex-1 justify-evenly items-center text-xl text-white font-light"
-        >
-          <h3 class="text-shadow-xl">Browse Games</h3>
-          <h3 class="text-shadow-xl">Browse Categories</h3>
-          <h3 class="text-shadow-xl">Upload Game</h3>
-          <h3 class="text-shadow-xl">About Us</h3>
-        </div>
-        <div class="flex justify-center items-center fill-white mx-auto pr-12">
-          <h3 class="text-white text-sm font-normal px-2 text-shadow-xl">
-            Welcome Back, <br />
-            Killer666
-          </h3>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            width="32"
-            height="32"
-          >
-            <path fill="none" d="M0 0h24v24H0z" />
-            <path
-              d="M4 22a8 8 0 1 1 16 0h-2a6 6 0 1 0-12 0H4zm8-9c-3.315 0-6-2.685-6-6s2.685-6 6-6 6 2.685 6 6-2.685 6-6 6zm0-2c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"
-            />
-          </svg>
-        </div>
-      </div>
-    </div>
+    <headerComp />
     <!-- HEADER -->
 
     <!-- BODY -->
-    <div class="flex flex-col h-200 bg-gray-700">
+    <div class="flex flex-col bg-gray-700 items-center">
       <div
-        class="flex mx-auto <md:(flex-col justify-center items-center) px-12 border bg-gray-200 rounded shadow-2xl mt-8"
+        class="flex mx-auto <md:(flex-col justify-center items-center) px-12 bg-gray-800 rounded shadow-2xl mt-8"
       >
         <div
           class="flex justify-start items-center <lg:(flex-col space-y-2 w-full)"
         >
-          <select name="" id="" class="mx-auto mr-8 bg-gray-300 p-1 rounded">
+          <select
+            name=""
+            id=""
+            class="mx-auto mr-8 bg-gray-300 p-1 rounded"
+            @change="
+              poopStore.categoryInput = $event.target.value;
+              poopStore.fetchGamesBySearch(
+                poopStore.searchInput,
+                poopStore.categoryInput,
+                poopStore.platformInput
+              );
+            "
+          >
             <option value="">All Genres</option>
-            <option value="Adventure">Adventure</option>
-            <option value="Builder">Builder</option>
-            <option value="Dungeon">Dungeon Crawler</option>
-            <option value="Exploration">Exploration</option>
-            <option value="MMO">MMO</option>
-            <option value="RPG">RPG</option>
-            <option value="Survie">Survie</option>
-            <option value="Weird">Weird</option>
+            <option
+              v-for="category in poopStore.categoryList"
+              :value="category.id"
+              :text="category.name"
+            ></option>
           </select>
 
-          <select name="" id="" class="mx-auto mr-8 bg-gray-300 p-1 rounded">
-            <option value="">Any costs</option>
-            <option value="">Offers</option>
-            <option value="">Priced games</option>
-            <option value="">Free</option>
+          <select
+            name=""
+            id=""
+            class="mx-auto mr-8 bg-gray-300 p-1 rounded"
+            @change="
+              poopStore.platformInput = $event.target.value;
+              poopStore.fetchGamesBySearch(
+                poopStore.searchInput,
+                poopStore.categoryInput,
+                poopStore.platformInput
+              );
+            "
+          >
+            <option value="">Any Platforms</option>
+            <option
+              v-for="platform in poopStore.platformsList"
+              :value="platform.id"
+              :text="platform.name"
+            ></option>
           </select>
         </div>
         <div class="flex py-2">
@@ -83,6 +76,17 @@ poopStore.callTwitchApi();
               class="bg-gray-300 outline-none"
               type="text"
               placeholder="Search a game !"
+              @input="
+                page = 1;
+                poopStore.searchInput = $event.target.value;
+                $event.target.value
+                  ? poopStore.fetchGamesBySearch(
+                      poopStore.searchInput,
+                      poopStore.categoryInput,
+                      poopStore.platformInput
+                    )
+                  : poopStore.getGamesInfos();
+              "
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -99,18 +103,45 @@ poopStore.callTwitchApi();
           </section>
         </div>
       </div>
-      <div class="flex flex-col mx-auto px-12 py-8 space-y-4">
-        <div class="grid <md:(grid-cols-2) grid-cols-4 gap-4">
+      <div class="container flex flex-col mx-auto px-12 py-8 space-y-4">
+        <div
+          class="grid <sm:(grid-cols-1) <md:(grid-cols-2) grid-cols-4 gap-4"
+          v-auto-animate
+        >
           <GameCardFree
-            v-for="(jeu, key) in poopStore.objResponse"
-            :game-id="`${key}`"
+            v-auto-animate
+            v-for="jeu in poopStore.allGamesInfos"
+            :game-id="`${jeu.id}`"
             :gameTitle="`${jeu.name}`"
-            :picUrl="`${jeu.pictureUrl}`"
-            :category1="`${jeu.categories[0]}`"
-            :category2="`${jeu.categories[1]}`"
-            :price="`${jeu.price}`"
+            :picUrl="`${
+              jeu.background_image
+                ? jeu.background_image
+                : 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png'
+            }`"
+            :category1="`${jeu.genres[0] ? jeu.genres[0].name : ''}`"
+            :category2="jeu.genres[1] ? jeu.genres[1].name : ''"
+            :rating="`${jeu.rating}`"
+            :rating-top="`${jeu.rating_top}`"
           />
         </div>
+        <!-- Pages System -->
+        <div class="flex justify-center items-center">
+          <button
+            class="p-4 bg-gray-800 rounded font-normal text-xl text-light-50"
+            @click="
+              page = page + 1;
+              poopStore.fetchGamesBySearch(
+                poopStore.searchInput,
+                poopStore.categoryInput,
+                poopStore.platformInput,
+                page
+              );
+            "
+          >
+            Voir plus
+          </button>
+        </div>
+        <!-- Pages System -->
       </div>
     </div>
     <!-- BODY -->

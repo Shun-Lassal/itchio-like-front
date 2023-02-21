@@ -7,35 +7,32 @@ defineProps({
   picUrl: String,
   category1: String,
   category2: String,
-  price: String,
+  rating: String,
   platforms: String,
 });
 </script>
 
 <template>
-  <div class="flex flex-col shadow-xl bg-gray-200 rounded select-none">
-    <div class="">
+  <div class="flex flex-col shadow-xl bg-gray-800 rounded select-none">
+    <div class="flex">
       <img
         :src="`${picUrl}`"
         alt=""
-        class="rounded-t h-full w-full object-cover"
+        class="rounded-t h-55 w-full object-cover"
       />
     </div>
-    <div class="flex flex-col">
-      <div class="flex justify-between items-center px-2 py-1">
+    <div class="flex flex-col h-full justify-end">
+      <div class="flex <lg:(flex-col) justify-between items-center px-2 py-1">
         <router-link
           :to="`/game/${gameId}`"
-          class="font-semibold text-xl hover:(text-purple-600)"
+          class="font-semibold text-xl text-gray-50 hover:(text-yellow-400)"
           >{{ gameTitle }}</router-link
         >
-        <span v-if="this.price == '0'" class="bg-gray-300 p-1 border rounded"
-          >Free</span
-        >
-        <span
-          v-else="this.price != '0'"
-          class="bg-gray-500 text-white p-1 border rounded"
-          >{{ price }} €</span
-        >
+        <div class="">
+          <span class="text-lg font-bold text-gray-400">{{ rating }}</span>
+          <span class="text-lg font-bold text-light-50 p-1">/</span>
+          <span class="text-lg font-bold text-yellow-300">5</span>
+        </div>
       </div>
       <div class="flex px-2 space-x-2">
         <span class="text-gray-500">{{ category1 }}</span>
@@ -43,7 +40,7 @@ defineProps({
           category2
         }}</span>
       </div>
-      <div class="flex p-1 justify-end items-center">
+      <div class="flex p-1 justify-end items-end fill-gray-500">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"

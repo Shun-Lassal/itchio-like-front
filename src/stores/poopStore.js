@@ -5,76 +5,183 @@ export const usePoopStore = defineStore({
   id: "poopStore",
   state: () => ({
     config: {},
-    igdb_url: "https://api.igdb.com/v4/games",
-    client_id: "c77vhqg06a3xwfbj8f12go5qelh85d",
-    client_secret: "3j6untxxr8c0b3dejxr7t92525a0xt",
-    objResponse: {
+    objReviews: {
       1: {
-        name: "Last Oasis",
-        pictureUrl:
-          "https://cdn.cloudflare.steamstatic.com/steam/apps/903950/header.jpg?t=1664882072",
-        categories: ["MMO", "Survie"],
-        price: "5",
+        positiveReview: true,
+        timePlayed: 461,
+        time2LastWeeks: 15,
+        textReview:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus molestias repellat in enim dicta doloremque facilis soluta iure sapiente, perspiciatis similique itaque nihil corrupti optio aspernatur quo, asperiores tempora voluptates!",
+        reviewerPicUrl: "https://picsum.photos/200",
+        reviewerName: "LeZouzouDu81",
       },
       2: {
-        name: "Dark and Darker",
-        pictureUrl:
-          "https://cdn.akamai.steamstatic.com/steam/apps/2016590/header.jpg?t=1675686408",
-        categories: ["Dungeon", "Adventure"],
-        price: "0",
+        positiveReview: false,
+        timePlayed: 461,
+        time2LastWeeks: 15,
+        textReview:
+          "JEU TROP COOL J'ADORE LES ANIMATIONS GG AUX DEVELOPPEURS !!!",
+        reviewerPicUrl: "https://picsum.photos/200",
+        reviewerName: "LeZouzouDu81",
       },
       3: {
-        name: "Elder Scrolls Online",
-        pictureUrl:
-          "https://cdn.akamai.steamstatic.com/steam/apps/306130/header.jpg?t=1674679947",
-        categories: ["MMO", "RPG"],
-        price: "19,99",
+        positiveReview: false,
+        timePlayed: 461,
+        time2LastWeeks: 15,
+        textReview:
+          "JEU TROP COOL J'ADORE LES ANIMATIONS GG AUX DEVELOPPEURS !!!",
+        reviewerPicUrl: "https://picsum.photos/200",
+        reviewerName: "LeZouzouDu81",
       },
       4: {
-        name: "Rust",
-        pictureUrl:
-          "https://cdn.akamai.steamstatic.com/steam/apps/252490/header.jpg?t=1671160999",
-        categories: ["Survie", "Weird"],
-        price: "25,99",
+        positiveReview: true,
+        timePlayed: 461,
+        time2LastWeeks: 15,
+        textReview:
+          "JEU TROP COOL J'ADORE LES ANIMATIONS GG AUX DEVELOPPEURS !!!",
+        reviewerPicUrl: "https://picsum.photos/200",
+        reviewerName: "LeZouzouDu81",
       },
       5: {
-        name: "Barotrauma",
-        pictureUrl:
-          "https://cdn.akamai.steamstatic.com/steam/apps/602960/header.jpg?t=1675176455",
-        categories: ["Dungeon", "Exploration"],
-        price: "10",
-      },
-      6: {
-        name: "Terraria",
-        pictureUrl:
-          "https://cdn.cloudflare.steamstatic.com/steam/apps/105600/header.jpg?t=1666290860",
-        categories: ["Adventure", "Exploration", "Survie"],
-        price: "9,99",
-      },
-      7: {
-        name: "Factorio",
-        pictureUrl:
-          "https://cdn.akamai.steamstatic.com/steam/apps/427520/header.jpg?t=1664264081",
-        categories: ["Builder", "Survie"],
-        price: "20,99",
-      },
-      8: {
-        name: "Rimworld",
-        pictureUrl:
-          "https://cdn.akamai.steamstatic.com/steam/apps/294100/header.jpg?t=1674495375",
-        categories: ["Builder", "RPG"],
-        price: "20,99",
+        positiveReview: true,
+        timePlayed: 461,
+        time2LastWeeks: 15,
+        textReview:
+          "JEU TROP COOL J'ADORE LES ANIMATIONS GG AUX DEVELOPPEURS !!!",
+        reviewerPicUrl: "https://picsum.photos/200",
+        reviewerName: "LeZouzouDu81",
       },
     },
+    dataReq: [],
+    allGamesInfos: [],
+    aGameInfos: [],
+    api: "https://api.rawg.io/api/",
+    apiKey: `key=f9ffe099be0a466eb8f7ff46f77e5a20`,
+    categoryList: [],
+    platformsList: [],
+    searchInput: "",
+    categoryInput: "",
+    platformInput: "",
   }),
   actions: {
-    async callTwitchApi() {
-      const { data } = await secureAxios.post(
-        `https://id.twitch.tv/oauth2/token?client_id=${this.client_id}&client_secret=${this.client_secret}&grant_type=client_credentials`
+    async getGamesInfos() {
+      const { data } = await secureAxios.get(
+        `https://api.rawg.io/api/games?search=&search_precise=true&search_exact=true&ordering=-rating&exclude_additions=true&page=1&${this.apiKey}`
       );
-      if (data) {
-        console.log(data);
+      this.allGamesInfos = data.results;
+      console.log(data);
+    },
+
+    async getAGameInfos(gameId) {
+      const { data } = await secureAxios.get(
+        `https://api.rawg.io/api/games/${gameId}?${this.apiKey}`
+      );
+      this.aGameInfos = await data;
+    },
+
+    async fetchGamesBySearch(
+      searchInput,
+      categoryInput,
+      platformInput,
+      page = 1
+    ) {
+      var categ = "";
+      var platf = "";
+      var pageP = "";
+      if (categoryInput != "") {
+        categ = "&genres=" + this.categoryInput;
       }
+
+      if (platformInput != "") {
+        platf = "&platforms=" + this.platformInput;
+      }
+
+      if (page > 1) {
+        pageP = "&page=" + page;
+
+        var buffer = await this.getApiList(
+          this.api,
+          "games",
+          "search=" +
+            searchInput +
+            `&ordering=-rating&search_precise=true` +
+            categ +
+            platf +
+            pageP,
+          this.apiKey
+        );
+
+        buffer.forEach((element) => {
+          this.allGamesInfos.push(element);
+        });
+
+        console.log(this.allGamesInfos);
+      } else {
+        this.allGamesInfos = await this.getApiList(
+          this.api,
+          "games",
+          "search=" +
+            searchInput +
+            `&ordering=-rating&search_precise=true` +
+            categ +
+            platf,
+          this.apiKey
+        );
+      }
+      console.log(
+        this.api +
+          "games" +
+          "?search=" +
+          searchInput +
+          `&search_precise=true&search_exact=true&ordering=-rating&exclude_additions=true` +
+          categ +
+          platf +
+          pageP,
+        this.apiKey
+      );
+    },
+
+    async fetchGameNextPage() {},
+
+    async fetchPlatforms() {
+      this.platformsList = await this.getApiList(
+        this.api,
+        "platforms",
+        "",
+        this.apiKey
+      );
+      console.log(this.platformsList);
+    },
+
+    async fetchGenres() {
+      this.categoryList = await this.getApiList(
+        this.api,
+        "genres",
+        "",
+        this.apiKey
+      );
+      console.log(this.categoryList);
+    },
+
+    async getApiList(apiLink, route, queries, apiKey) {
+      if (queries == "") {
+        var link = apiLink + route + "?" + apiKey;
+      } else {
+        var link = apiLink + route + "?" + queries + "&" + apiKey;
+      }
+
+      const { data } = await secureAxios.get(link);
+      if (data.results) {
+        this.dataReq = data;
+        console.log(await data.results);
+        return data.results;
+      } else {
+        console.log("getApiList function, no data.results");
+      }
+    },
+
+    async getApiId(api, route, id, queries, apiKey) {
+      var link = api + route + "/" + id;
     },
   },
 });
