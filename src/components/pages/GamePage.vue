@@ -107,36 +107,32 @@ const seeMore = ref(false);
             class="flex flex-col justify-center items-center mt-4 bg-gradient-to-t from-gray-700 to-gray-600"
           >
             <div class="text-white font-bold text-2xl mt-1">
-              <span>Achetez ShittyGame:</span>
-              <span class="p-2 font-light bg-dark-500 rounded text-lg ml-3"
-                >15,99 €</span
-              >
+              <span>Buy {{ poopStore?.aGameInfos?.name }} at:</span>
             </div>
-            <div class="">
-              <button
-                class="px-4 py-2 bg-gray-800 text-white font-extrabold text-xl m-2"
+            <div class="flex">
+              <a
+                class="m-2 py-2 px-4 rounded bg-gray-800 text-white font-extrabold text-xl"
+                v-for="store in poopStore.aGameInfos.stores"
+                :href="`https://${store.store.domain}`"
               >
-                STEAM
-              </button>
-              <button
-                class="px-4 py-2 bg-blue-600 text-white font-extrabold text-xl m-2"
+                {{ store.store.name }}
+              </a>
+              <span
+                v-if="poopStore.aGameInfos.stores == ''"
+                class="text-xl font-semibold text-gray-300 mb-2"
               >
-                PS Store
-              </button>
-              <button
-                class="px-4 py-2 bg-green-600 text-white font-extrabold text-xl m-2"
-              >
-                Windows Store
-              </button>
+                Sorry, there is no stores available for this game
+              </span>
             </div>
           </div>
         </div>
+        <!--
         <div class="flex flex-col my-4">
           <h3 class="mb-4 text-center text-2xl font-bold text-light-50">
             Avis des joueurs
           </h3>
           <div class="grid grid-cols-2 <md:(grid-cols-1) gap-4">
-            <reviewCard
+              <reviewCard
               v-for="review in poopStore.objReviews"
               :positiveReview="review.positiveReview"
               :timePlayed="review.timePlayed"
@@ -147,7 +143,7 @@ const seeMore = ref(false);
             />
           </div>
         </div>
-      </div>
+      --></div>
     </div>
   </div>
 </template>

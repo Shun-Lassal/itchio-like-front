@@ -1,9 +1,11 @@
 <script setup>
 import { usePoopStore } from "../../stores/poopStore";
 import headerComp from "../comps/headerComp.vue";
+import footerComp from "../comps/footerComp.vue";
 import GameCardFree from "../comps/gameCardFree.vue";
 import { onMounted } from "vue";
 import { ref } from "vue";
+import FooterComp from "../comps/footerComp.vue";
 
 const poopStore = usePoopStore();
 onMounted(async () => {
@@ -22,6 +24,13 @@ const page = ref(1);
 
     <!-- BODY -->
     <div class="flex flex-col bg-gray-700 items-center">
+      <div>
+        <h3
+          class="text-3xl text-white font-bold text-shadow-lg mt-10 text-center"
+        >
+          Game library provided by Rawg.io
+        </h3>
+      </div>
       <div
         class="flex mx-auto <md:(flex-col justify-center items-center) px-12 bg-gray-800 rounded shadow-2xl mt-8"
       >
@@ -31,7 +40,7 @@ const page = ref(1);
           <select
             name=""
             id=""
-            class="mx-auto mr-8 bg-gray-300 p-1 rounded"
+            class="mx-auto mr-8 bg-gray-300 p-1 rounded-sm <md:(mt-2 w-full)"
             @change="
               poopStore.categoryInput = $event.target.value;
               poopStore.fetchGamesBySearch(
@@ -52,7 +61,7 @@ const page = ref(1);
           <select
             name=""
             id=""
-            class="mx-auto mr-8 bg-gray-300 p-1 rounded"
+            class="mx-auto mr-8 bg-gray-300 p-1 rounded-sm <md:(mt-2 w-full)"
             @change="
               poopStore.platformInput = $event.target.value;
               poopStore.fetchGamesBySearch(
@@ -71,11 +80,13 @@ const page = ref(1);
           </select>
         </div>
         <div class="flex py-2">
-          <section class="flex items-center p-1 bg-gray-300 rounded py-1">
+          <section
+            class="flex items-center p-1 bg-gray-300 rounded py-1 rounded-sm"
+          >
             <input
-              class="bg-gray-300 outline-none"
+              class="bg-gray-300 outline-none <md:(w-full) rounded-sm placeholder-gray-700"
               type="text"
-              placeholder="Search a game !"
+              :placeholder="`Search ${poopStore.dataReq.count} games !`"
               @input="
                 page = 1;
                 poopStore.searchInput = $event.target.value;
@@ -147,7 +158,7 @@ const page = ref(1);
     <!-- BODY -->
 
     <!-- FOOTER -->
-    <div></div>
+    <footerComp />
     <!-- FOOTER -->
   </div>
 </template>

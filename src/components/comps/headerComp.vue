@@ -15,8 +15,6 @@
       <div
         class="flex flex-1 items-center md:(justify-evenly) <md:(justify-around) w-full text-xl text-white font-light"
       >
-        <h3 class="text-shadow-xl <md:(text-xs)">Browse Games</h3>
-        <h3 class="text-shadow-xl <md:(text-xs)">Browse Categories</h3>
         <h3 class="text-shadow-xl <md:(text-xs)">Upload Game</h3>
         <h3 class="text-shadow-xl <md:(text-xs)">About Us</h3>
       </div>

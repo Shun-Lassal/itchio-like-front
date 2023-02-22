@@ -66,8 +66,9 @@ export const usePoopStore = defineStore({
   actions: {
     async getGamesInfos() {
       const { data } = await secureAxios.get(
-        `https://api.rawg.io/api/games?search=&search_precise=true&search_exact=true&ordering=-rating&exclude_additions=true&page=1&${this.apiKey}`
+        `https://api.rawg.io/api/games?search=&search_precise=true&search_exact=true&ordering=-metacritic&exclude_additions=true&page=1&${this.apiKey}`
       );
+      this.dataReq = data;
       this.allGamesInfos = data.results;
       console.log(data);
     },
@@ -172,7 +173,6 @@ export const usePoopStore = defineStore({
 
       const { data } = await secureAxios.get(link);
       if (data.results) {
-        this.dataReq = data;
         console.log(await data.results);
         return data.results;
       } else {
