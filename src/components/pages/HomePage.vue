@@ -149,7 +149,7 @@ const page = ref(1);
               );
             "
           >
-            Voir plus
+            See more
           </button>
         </div>
         <!-- Pages System -->

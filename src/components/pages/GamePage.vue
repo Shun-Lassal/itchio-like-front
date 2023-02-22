@@ -76,9 +76,16 @@ const seeMore = ref(false);
             </div>
             <div class="text-gray-500">
               <span class="text-gray-500">Metacritic Review: </span>
-              <span class="text-light-50 font-black text-xl">{{
-                poopStore.aGameInfos.metacritic
-              }}</span>
+              <span
+                class="text-light-50 font-black text-xl"
+                v-if="poopStore.aGameInfos.stores != ''"
+                >{{ poopStore.aGameInfos.metacritic }}</span
+              >
+              <span
+                class="text-light-50 font-black"
+                v-if="poopStore.aGameInfos.stores == ''"
+                >No ratings</span
+              >
             </div>
             <div class="flex flex-wrap text-gray-500 items-center">
               <span class="text-gray-500">Developpers: </span>
